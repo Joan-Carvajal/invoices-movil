@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\Client;
+use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +20,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -46,7 +49,21 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Un usuario con un cliente y una factura con adjunto.
+ * Llama antes a Storage::fake('local') para no escribir el adjunto en tu disco.
+ */
+function userWithInvoice(): User
 {
-    // ..
+    return User::factory()
+        ->has(Client::factory()->has(Invoice::factory()->withAttachment()))
+        ->create();
+}
+
+/**
+ * La factura de un usuario creado con userWithInvoice().
+ */
+function invoiceOf(User $user): Invoice
+{
+    return $user->invoices()->firstOrFail();
 }
