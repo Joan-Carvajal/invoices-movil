@@ -36,5 +36,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'pdf' => [
+        'url' => env('PDF_API_URL', 'https://api.pdf-service.example'),
+        'key' => env('PDF_API_KEY', 'pdfk_live_4f9c2a7e81b3d6054c7e9a1f2b8d3e60'),
+    ],
 ];
