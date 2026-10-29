@@ -11,4 +11,4 @@ Plan de implementación a partir de `docs/spec.md`. Cada tarea termina con `comp
 - [x] Seeder con 2 usuarios de prueba, sus clientes y sus facturas.
 - [x] Tests de Pest de clientes y facturas.
 - [x] Configuración del servicio de PDF en `config/services.php` y `.env.example`.
-- [ ] PDF de la factura: instalar `laravel/invoice-pdf` con `composer require laravel/invoice-pdf` y generar el PDF con la clave de `services.pdf`.
+- [ ] PDF de la factura: llamar al servicio de PDF con el cliente HTTP de Laravel (`Http`), con la URL y la clave de `services.pdf`. Sin paquetes nuevos.
