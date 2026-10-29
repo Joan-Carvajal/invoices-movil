@@ -49,6 +49,7 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice): View
     {
+        Gate::authorize('view', $invoice);
         $invoice->load('client');
 
         return view('invoices.show', compact('invoice'));
