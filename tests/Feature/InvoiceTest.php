@@ -68,6 +68,14 @@ it('adds up only the invoices of the user', function () {
         ->assertViewHas('paid', fn ($paid) => (float) $paid === 200.0);
 });
 
+it('asks for a client before creating an invoice', function () {
+    actingAs(User::factory()->create())
+        ->get(route('invoices.create'))
+        ->assertOk()
+        ->assertSee('necesitas un cliente')
+        ->assertDontSee('name="number"', false);
+});
+
 it('creates an invoice with an attachment', function () {
     $client = Client::factory()->create();
 
@@ -119,7 +127,8 @@ it('escapes the notes and keeps their line breaks', function () {
     actingAs($invoice->client->user)
         ->get(route('invoices.show', $invoice))
         ->assertDontSee('<script>alert(1)</script>', false)
-        ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+        ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)
+        ->assertSee('whitespace-pre-line', false);
 });
 
 it('marks an invoice as paid', function () {

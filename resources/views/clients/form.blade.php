@@ -3,23 +3,26 @@
 @section('title', $client->exists ? 'Editar cliente' : 'Nuevo cliente')
 
 @section('content')
-    <h1>{{ $client->exists ? 'Editar cliente' : 'Nuevo cliente' }}</h1>
+    <x-page-header :title="$client->exists ? 'Editar cliente' : 'Nuevo cliente'" :back="route('clients.index')" />
 
-    <form method="POST" action="{{ $client->exists ? route('clients.update', $client) : route('clients.store') }}">
+    <form method="POST" action="{{ $client->exists ? route('clients.update', $client) : route('clients.store') }}" class="card space-y-4 p-4">
         @csrf
         @if ($client->exists)
             @method('PUT')
         @endif
 
-        <label for="name">Nombre</label>
-        <input id="name" name="name" value="{{ old('name', $client->name) }}" required>
+        <x-field name="name" label="Nombre">
+            <input id="name" class="input" name="name" value="{{ old('name', $client->name) }}" autocomplete="organization" @error('name') aria-invalid="true" @enderror required>
+        </x-field>
 
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" value="{{ old('email', $client->email) }}">
+        <x-field name="email" label="Email">
+            <input id="email" class="input" type="email" name="email" value="{{ old('email', $client->email) }}" autocomplete="email" autocapitalize="none" inputmode="email" @error('email') aria-invalid="true" @enderror>
+        </x-field>
 
-        <label for="tax_id">NIF</label>
-        <input id="tax_id" name="tax_id" value="{{ old('tax_id', $client->tax_id) }}">
+        <x-field name="tax_id" label="NIF">
+            <input id="tax_id" class="input" name="tax_id" value="{{ old('tax_id', $client->tax_id) }}" autocapitalize="characters" autocomplete="off" @error('tax_id') aria-invalid="true" @enderror>
+        </x-field>
 
-        <p><button type="submit">Guardar</button></p>
+        <button type="submit" class="btn btn-primary w-full">Guardar</button>
     </form>
 @endsection
