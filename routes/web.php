@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\SetupController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceAttachmentController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InvoicePhotoController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/invoices');
@@ -25,5 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('clients', ClientController::class)->except(['show', 'destroy']);
     Route::resource('invoices', InvoiceController::class);
     Route::get('invoices/{invoice}/attachment', InvoiceAttachmentController::class)->name('invoices.attachment');
+    Route::post('invoices/{invoice}/photo', InvoicePhotoController::class)->name('invoices.photo');
     Route::patch('invoices/{invoice}/paid', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
 });
