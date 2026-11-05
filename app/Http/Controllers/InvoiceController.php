@@ -19,15 +19,26 @@ class InvoiceController extends Controller
     public function index(Request $request): View
     {
         $search = $request->string('q')->trim()->toString();
+        $status = $request->string('status')->toString();
+        $status = array_key_exists($status, Invoice::STATUSES) ? $status : null;
 
         $invoices = $request->user()->invoices()
             ->with('client')
             ->when($search !== '', fn ($query) => $query->whereLike('invoices.number', '%'.$search.'%'))
+            ->when($status !== null, fn ($query) => $query->where('invoices.status', $status))
             ->latest('issued_at')
+            ->latest('invoices.id')
             ->paginate(15)
             ->withQueryString();
 
-        return view('invoices.index', compact('invoices', 'search'));
+        return view('invoices.index', [
+            'invoices' => $invoices,
+            'search' => $search,
+            'status' => $status,
+            'pending' => $request->user()->invoices()->where('invoices.status', 'sent')->sum('invoices.amount'),
+            'paid' => $request->user()->invoices()->where('invoices.status', 'paid')->sum('invoices.amount'),
+            'hasClients' => $request->user()->clients()->exists(),
+        ]);
     }
 
     public function create(Request $request): View

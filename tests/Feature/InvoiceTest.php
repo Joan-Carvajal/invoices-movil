@@ -40,6 +40,34 @@ it('does not let a search break out of the query', function () {
         ->assertDontSee('F-2026-0002');
 });
 
+it('filters the invoices by status and ignores an unknown one', function () {
+    $client = Client::factory()->create();
+    Invoice::factory()->for($client)->create(['number' => 'F-2026-0001', 'status' => 'draft']);
+    Invoice::factory()->for($client)->create(['number' => 'F-2026-0002', 'status' => 'paid']);
+
+    actingAs($client->user)
+        ->get(route('invoices.index', ['status' => 'paid']))
+        ->assertSee('F-2026-0002')
+        ->assertDontSee('F-2026-0001');
+
+    actingAs($client->user)
+        ->get(route('invoices.index', ['status' => 'nope']))
+        ->assertSee('F-2026-0001')
+        ->assertSee('F-2026-0002');
+});
+
+it('adds up only the invoices of the user', function () {
+    $client = Client::factory()->create();
+    Invoice::factory()->for($client)->create(['amount' => '100.50', 'status' => 'sent']);
+    Invoice::factory()->for($client)->create(['amount' => '200.00', 'status' => 'paid']);
+    Invoice::factory()->create(['amount' => '999.00', 'status' => 'sent']);
+
+    actingAs($client->user)
+        ->get(route('invoices.index'))
+        ->assertViewHas('pending', fn ($pending) => (float) $pending === 100.5)
+        ->assertViewHas('paid', fn ($paid) => (float) $paid === 200.0);
+});
+
 it('creates an invoice with an attachment', function () {
     $client = Client::factory()->create();
 
