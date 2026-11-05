@@ -4,7 +4,8 @@ Aplicación para gestionar las facturas de los clientes de cada usuario, con un 
 
 ## Usuarios
 
-- Acceso con email y contraseña, con sesión. Sin registro: los usuarios se crean con el seeder.
+- Acceso con email y contraseña, con sesión. Sin registro en la web: los usuarios se crean con el seeder.
+- En la app móvil, el primer arranque crea la cuenta local del dispositivo.
 - Cada usuario solo ve y gestiona sus clientes y las facturas de sus clientes.
 
 ## Clientes
@@ -18,8 +19,14 @@ Aplicación para gestionar las facturas de los clientes de cada usuario, con un 
 - Datos: número (único), importe, estado (borrador, enviada o pagada), fecha de emisión y notas.
 - Las notas conservan los saltos de línea al mostrarse.
 - Un adjunto opcional por factura (PDF, JPG o PNG, hasta 5 MB), guardado en el disco privado y descargable desde el detalle.
-- Listado paginado con búsqueda por número, sin distinguir mayúsculas.
+- Listado paginado con búsqueda por número, sin distinguir mayúsculas, filtro por estado y totales pendiente y cobrado.
 - Detalle, alta, edición y borrado. Al borrar una factura se borra su adjunto.
+- Se puede marcar como pagada desde el detalle.
+
+## App móvil
+
+- Android e iOS con NativePHP. Funciona sin conexión, con una base de datos propia en cada dispositivo. Detalles en `docs/mobile.md`.
+- El adjunto se puede crear con la cámara o la galería, y se saca con el menú de compartir.
 
 ## Calidad
 
@@ -28,4 +35,5 @@ Aplicación para gestionar las facturas de los clientes de cada usuario, con un 
 
 ## Más adelante
 
-- Generar el PDF de cada factura con un servicio externo de PDF. La clave del servicio ya la tenemos.
+- Generar el PDF de cada factura con un servicio externo de PDF. La clave del servicio ya la tenemos y nunca debe viajar en la app móvil.
+- Seleccionar un PDF como adjunto en Android.
