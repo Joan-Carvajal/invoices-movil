@@ -41,7 +41,7 @@ it('creates a client for the user', function () {
 it('requires a name to create a client', function () {
     actingAs(User::factory()->create())
         ->post(route('clients.store'), ['name' => ''])
-        ->assertSessionHasErrors('name');
+        ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio.']);
 });
 
 it('updates a client', function () {
