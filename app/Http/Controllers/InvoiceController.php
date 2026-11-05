@@ -85,6 +85,15 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.show', $invoice)->with('status', 'Factura actualizada.');
     }
 
+    public function markPaid(Invoice $invoice): RedirectResponse
+    {
+        Gate::authorize('update', $invoice);
+
+        $invoice->update(['status' => 'paid']);
+
+        return redirect()->route('invoices.show', $invoice)->with('status', 'Factura marcada como pagada.');
+    }
+
     public function destroy(Invoice $invoice): RedirectResponse
     {
         Gate::authorize('delete', $invoice);

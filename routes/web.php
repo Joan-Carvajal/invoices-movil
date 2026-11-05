@@ -21,4 +21,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('clients', ClientController::class)->except(['show', 'destroy']);
     Route::resource('invoices', InvoiceController::class);
     Route::get('invoices/{invoice}/attachment', InvoiceAttachmentController::class)->name('invoices.attachment');
+    Route::patch('invoices/{invoice}/paid', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
 });

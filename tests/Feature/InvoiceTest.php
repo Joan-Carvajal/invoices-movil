@@ -122,6 +122,26 @@ it('escapes the notes and keeps their line breaks', function () {
         ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
 });
 
+it('marks an invoice as paid', function () {
+    $invoice = Invoice::factory()->create(['status' => 'sent']);
+
+    actingAs($invoice->client->user)
+        ->patch(route('invoices.mark-paid', $invoice))
+        ->assertRedirect(route('invoices.show', $invoice));
+
+    expect($invoice->fresh()->status)->toBe('paid');
+});
+
+it('does not let a user mark as paid an invoice of another user', function () {
+    $invoice = Invoice::factory()->create(['status' => 'sent']);
+
+    actingAs(User::factory()->create())
+        ->patch(route('invoices.mark-paid', $invoice))
+        ->assertForbidden();
+
+    expect($invoice->fresh()->status)->toBe('sent');
+});
+
 it('downloads the attachment of an invoice', function () {
     $invoice = Invoice::factory()->withAttachment()->create();
 
