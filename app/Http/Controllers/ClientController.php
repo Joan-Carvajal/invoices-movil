@@ -41,11 +41,11 @@ class ClientController extends Controller
         return view('clients.form', compact('client'));
     }
 
-    public function update(Request $request, Client $client): RedirectResponse
+    public function update(StoreClientRequest $request, Client $client): RedirectResponse
     {
         abort_unless($client->user()->is($request->user()), 403);
 
-        $client->update($request->all());
+        $client->update($request->validated());
 
         return redirect()->route('clients.index')->with('status', 'Cliente actualizado.');
     }

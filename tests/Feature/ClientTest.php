@@ -65,3 +65,17 @@ it('does not let a user edit a client of another user', function () {
         ->get(route('clients.edit', $client))
         ->assertForbidden();
 });
+
+it('does not let a client be reassigned to another user', function () {
+    $client = Client::factory()->create();
+    $owner = $client->user;
+
+    actingAs($owner)
+        ->put(route('clients.update', $client), [
+            'name' => 'Talleres Ruiz',
+            'user_id' => User::factory()->create()->id,
+        ])
+        ->assertRedirect(route('clients.index'));
+
+    expect($client->fresh()->user_id)->toBe($owner->id);
+});

@@ -15,7 +15,11 @@ class Client extends Model
     /** @use HasFactory<ClientFactory> */
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'tax_id',
+    ];
 
     /**
      * @return BelongsTo<User, $this>
