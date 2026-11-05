@@ -20,7 +20,7 @@
 
         @if ($invoice->notes)
             <dt>Notas</dt>
-            <dd>{!! nl2br($invoice->notes) !!}</dd>
+            <dd>{!! nl2br(e($invoice->notes)) !!}</dd>
         @endif
     </dl>
 

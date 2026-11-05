@@ -85,6 +85,15 @@ it('shows an invoice with its notes', function () {
         ->assertSee('Pago a 30 días.');
 });
 
+it('escapes the notes and keeps their line breaks', function () {
+    $invoice = Invoice::factory()->create(['notes' => "<script>alert(1)</script>\nSegunda línea"]);
+
+    actingAs($invoice->client->user)
+        ->get(route('invoices.show', $invoice))
+        ->assertDontSee('<script>alert(1)</script>', false)
+        ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+});
+
 it('downloads the attachment of an invoice', function () {
     $invoice = Invoice::factory()->withAttachment()->create();
 
