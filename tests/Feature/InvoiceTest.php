@@ -29,6 +29,17 @@ it('lists the invoices of the user and searches by number', function () {
         ->assertDontSee('F-2026-0002');
 });
 
+it('does not let a search break out of the query', function () {
+    $invoice = Invoice::factory()->create(['number' => 'F-2026-0001']);
+    Invoice::factory()->create(['number' => 'F-2026-0002']);
+
+    actingAs($invoice->client->user)
+        ->get(route('invoices.index', ['q' => "%' OR 1=1 -- "]))
+        ->assertOk()
+        ->assertDontSee('F-2026-0001')
+        ->assertDontSee('F-2026-0002');
+});
+
 it('creates an invoice with an attachment', function () {
     $client = Client::factory()->create();
 

@@ -22,7 +22,7 @@ class InvoiceController extends Controller
 
         $invoices = $request->user()->invoices()
             ->with('client')
-            ->when($search !== '', fn ($query) => $query->whereRaw("LOWER(number) LIKE '%".mb_strtolower($search)."%'"))
+            ->when($search !== '', fn ($query) => $query->whereLike('invoices.number', '%'.$search.'%'))
             ->latest('issued_at')
             ->paginate(15)
             ->withQueryString();
