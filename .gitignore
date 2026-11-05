@@ -13,10 +13,13 @@
 /.vscode
 /.zed
 /auth.json
+/nativephp
 /node_modules
+/public/android-hot
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
+/public/ios-hot
 /public/storage
 /storage/*.key
 /storage/pail
