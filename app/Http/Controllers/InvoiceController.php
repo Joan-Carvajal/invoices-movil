@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
@@ -98,10 +97,7 @@ class InvoiceController extends Controller
     {
         Gate::authorize('delete', $invoice);
 
-        if ($invoice->attachment_path !== null) {
-            Storage::disk('local')->delete($invoice->attachment_path);
-        }
-
+        $invoice->deleteAttachmentFile();
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('status', 'Factura eliminada.');
@@ -111,15 +107,8 @@ class InvoiceController extends Controller
     {
         $file = $request->file('attachment');
 
-        if (! $file instanceof UploadedFile) {
-            return;
+        if ($file instanceof UploadedFile) {
+            $invoice->attachFile($file);
         }
-
-        if ($invoice->attachment_path !== null) {
-            Storage::disk('local')->delete($invoice->attachment_path);
-        }
-
-        $invoice->attachment_path = $file->store('attachments', 'local');
-        $invoice->attachment_name = $file->getClientOriginalName();
     }
 }
